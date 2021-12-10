@@ -8,7 +8,6 @@ import java.util.Set;
 
 @Table(name = "Diary_users", indexes = {
         @Index(name = "UNIQUE", columnList = "email", unique = true),
-//        @Index(name = "user_role_idx", columnList = "user_role_id")
 })
 @Entity
 @Getter
