@@ -5,6 +5,7 @@ import by.itacademy.javaenterprise.borisevich.entity.Training;
 import by.itacademy.javaenterprise.borisevich.exception.DAOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,13 +26,10 @@ public class TrainingDAOImpl implements TrainingDAO {
 
     @Override
     @Transactional
-    public void saveOrUpdate(Training training) throws DAOException {
-        try {
-            Training training1 = entityManager.find(Training.class, training.getId());
-            if (training1 != null) {
-                entityManager.merge(training);
-            }
-        } catch (NullPointerException e) {
+    public void saveOrUpdate(Training training) {
+        if (training.getId() != null) {
+            entityManager.merge(training);
+        } else {
             entityManager.persist(training);
         }
     }
@@ -39,12 +37,18 @@ public class TrainingDAOImpl implements TrainingDAO {
 
     @Override
     public Training findById(Long id) throws DAOException {
-        return null;
+        if (id == null) {
+            throw new DAOException("id is null!");
+        }
+        return entityManager.find(Training.class, id);
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) throws DAOException {
-
+        if (id != null) {
+            entityManager.remove(entityManager.find(Training.class, id));
+        }
     }
 
     @Override
@@ -57,7 +61,6 @@ public class TrainingDAOImpl implements TrainingDAO {
         return (List<Training>) query.getResultList();
     }
 
-    @Transactional(readOnly = true)
     public long count() {
         Long count = entityManager
                 .createQuery("select count(m) from Training m", Long.class)
