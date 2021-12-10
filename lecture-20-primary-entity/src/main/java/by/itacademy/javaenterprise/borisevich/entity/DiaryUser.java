@@ -54,8 +54,8 @@ public class DiaryUser {
         return Convertation.convertToBYN(balanceAmount);
     }
 
-    public void setBalanceAmount(double balanceAmount) {
-        this.balanceAmount = (long) (balanceAmount * 100);
+    public void setBalanceAmount(Long balanceAmount) {
+        this.balanceAmount = balanceAmount;
     }
 
     @Override
