@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd
+http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd
+http://www.liquibase.org/xml/ns/pro ">
+
+    <changeSet author="borisevich" id="2021-11-03-create-table-user-roleType">
+        <createTable tableName="User_roles">
+            <column name="user_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_role_name" type="varchar(10)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="borisevich" id="2021-11-03-create-table-user">
+        <createTable tableName="Diary_users">
+            <column name="user_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="varchar(40)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="user_password" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="age" type="int(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="weight" type="int(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance_amount" type="bigint(20)" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_Name" type="varchar(20)" defaultValue="ATHLETE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="borisevich" id="2021-11-03-create-table-muscles">
+        <createTable tableName="Muscles">
+            <column name="muscle_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="muscle_name" type="varchar(20)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="description" type="varchar(20)" defaultValue="No description">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="borisevich" id="2021-11-03-create-table-exercise-name">
+        <createTable tableName="Exercises">
+            <column name="name_exercises_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(20)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="description" type="varchar(20)" defaultValue="No description">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="borisevich" id="2021-11-03-create-table-muscles-exercises-name">
+        <createTable tableName="Muscles_x_Exercises">
+            <column name="name_exercises_id" type="bigint">
+                <constraints unique="false" nullable="false"
+                             foreignKeyName="EXERCISE_FK" referencedTableName="Exercises"
+                             referencedColumnNames="name_exercises_id"/>
+            </column>
+            <column name="muscle_id" type="bigint">
+                <constraints unique="false" nullable="false"
+                             foreignKeyName="MUSCLE_FK" referencedTableName="Muscles"
+                             referencedColumnNames="muscle_id"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint columnNames="name_exercises_id, muscle_id"
+                              constraintName="const_name"
+                              tableName="Muscles_x_Exercises"/>
+    </changeSet>
+
+    <changeSet author="borisevich" id="2021-11-03-create-table-training">
+        <createTable tableName="Trainings">
+            <column name="training_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="training_date" type="datetime" defaultValueDate="2008-02-12T12:34:03"/>
+            <column name="start" type="time" defaultValueDate=""/>
+            <column name="end" type="time" defaultValueDate=""/>
+            <column name="user_id" type="bigint(20)">
+                <constraints unique="false" nullable="false"
+                             foreignKeyName="USER_FK" referencedTableName="Diary_users"
+                             referencedColumnNames="user_id"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="borisevich" id="2021-11-03-create-table-approaches">
+        <createTable tableName="Approaches">
+            <column name="approach_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="training_id" type="bigint(20)">
+                <constraints unique="false" nullable="false"
+                             foreignKeyName="Training_fk" referencedTableName="Trainings"
+                             referencedColumnNames="training_id"/>
+            </column>
+            <column name="name_exercises_id" type="bigint(20)">
+                <constraints unique="false" nullable="false"
+                             foreignKeyName="Name_Exercises_fk" referencedTableName="Exercises"
+                             referencedColumnNames="name_exercises_id"/>
+            </column>
+            <column name="approach_counter" type="int(20)" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time" type="time" defaultValueDate=""/>
+            <column name="weight" type="int(20)" defaultValueNumeric="0"/>
+            <column name="repeats" type="int(20)" defaultValueNumeric="0"/>
+        </createTable>
+    </changeSet>
+        <changeSet author="borisevich" id="2021-11-13-create-tables-country">
+            <sqlFile path="liquibase.sql" encoding="UTF-8" endDelimiter=";" splitStatements="true"
+                     stripComments="true" relativeToChangelogFile="true"/>
+        </changeSet>
+
+
+</databaseChangeLog>
